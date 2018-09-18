@@ -23,6 +23,7 @@ window.onload = function () {
         //mio
         controls = new THREE.OrbitControls(camera, $obj3D[0]);
         controls.enableDamping = true;
+        controls.enablePan = false;
         controls.dampingFactor = 0.08;
         controls.rotateSpeed = 0.03;
         controls.enableZoom = true;
@@ -31,7 +32,6 @@ window.onload = function () {
         controls.maxDistance = 230;
         controls.maxPolarAngle = Math.PI / 2;
         controls.screenSpacePanning = false;
-        controls.update();
         //
 
         var ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
@@ -107,12 +107,15 @@ window.onload = function () {
         window.addEventListener('resize', canvasResize, false);
     }
 
-    function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
-        render();
+    function update() {
+	    controls.update();
+	    renderer.render(scene, camera);
     }
-}
+
+    function animate() {
+        renderer.setAnimationLoop(update);
+    }
+};
 
 function canvasResize() {
     if (!MENU_OPEN) {
@@ -124,9 +127,4 @@ function canvasResize() {
     camera.aspect = w_container / h_container;
     camera.updateProjectionMatrix();
     renderer.setSize(w_container, h_container);
-}
-
-function render() {
-    camera.lookAt(scene.position);
-    renderer.render(scene, camera);
 }
